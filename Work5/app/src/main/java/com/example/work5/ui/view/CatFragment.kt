@@ -33,10 +33,8 @@ class CatFragment : Fragment() {
             loadImage(url)
         }
 
-        // Загружаем кота из базы данных при запуске
         catViewModel.loadCatFromDb()
 
-        // По клику запрашиваем кота из API
         binding.catBtn.setOnClickListener {
             catViewModel.fetchCat()
         }

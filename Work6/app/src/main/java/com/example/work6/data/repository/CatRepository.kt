@@ -38,10 +38,10 @@ class CatRepository @Inject constructor(
 
     private fun saveImageToInternalStorage(body: ResponseBody): Boolean {
         return try {
-            val file = File(context.filesDir, "cat_image.png")  // Путь для сохранения
+            val file = File(context.filesDir, "cat_image.png")
             val inputStream: InputStream = body.byteStream()
             FileOutputStream(file).use { output ->
-                inputStream.copyTo(output)  // Копируем поток данных в файл
+                inputStream.copyTo(output)
             }
             true
         } catch (e: Exception) {

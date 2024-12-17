@@ -1,6 +1,5 @@
 package com.example.practice_7_8
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -9,16 +8,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -54,20 +46,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     suspend fun downloadAndSaveImage(imageUrl: String): Bitmap? {
-        // Переводим выполнение в фоновый поток
         val bitmap = withContext(Dispatchers.IO) {
-            downloadImage(imageUrl) // Загружаем изображение
+            downloadImage(imageUrl)
         }
 
 
-        // Если изображение было успешно загружено, сохраняем его
+
         if (bitmap != null) {
             withContext(Dispatchers.IO) {
                 saveImageToDisk(bitmap)
             }
         }
 
-        return bitmap // Возвращаем результат (bitmap или null)
+        return bitmap
     }
 
     fun downloadImage(imageUrl: String): Bitmap? = runCatching {
@@ -84,7 +75,6 @@ class MainActivity : AppCompatActivity() {
             val file = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "downloaded_image.jpg")
             FileOutputStream(file).use { outputStream ->
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-                // принудительная запись данных
                 outputStream.flush()
             }
         }.onFailure { showToast("Ошибка сохранения изображения") }

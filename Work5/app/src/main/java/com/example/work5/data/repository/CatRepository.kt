@@ -16,7 +16,7 @@ class CatRepository(private val catDao: CatDao, private val catApi: CatApi) {
             override fun onResponse(call: Call<List<Cat>>, response: Response<List<Cat>>) {
                 if (response.isSuccessful) {
                     response.body()?.let { cats ->
-                        callback(Result.success(cats))  // Успешный результат
+                        callback(Result.success(cats))
                     } ?: run {
                         callback(Result.failure(Throwable("No cat data found")))
                     }
@@ -26,26 +26,19 @@ class CatRepository(private val catDao: CatDao, private val catApi: CatApi) {
             }
 
             override fun onFailure(call: Call<List<Cat>>, t: Throwable) {
-                callback(Result.failure(t))  // Обработка ошибки
+                callback(Result.failure(t))
             }
         })
     }
 
-    // Сохранение кота в базу данных
     suspend fun saveCatToDb(cat: Cat) = withContext(Dispatchers.IO) {
         catDao.insertCat(cat)
     }
 
-    // Получение кота из базы данных
     suspend fun getCatFromDb(): Cat? = withContext(Dispatchers.IO) {
         catDao.getCat()
     }
 }
-
-//    // Получение кота через API
-//    suspend fun fetchCatFromApi(): Response<List<Cat>> = withContext(Dispatchers.IO) {
-//    catApi.getCat().execute()
-//    }
 
 
 
